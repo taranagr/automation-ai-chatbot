@@ -1,0 +1,11 @@
+[project]
+name = "ai-chatbot-backend"
+version = "0.1.0"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "boto3",
+  "pydantic",
+  "mangum",
+  "httpx"
+]
