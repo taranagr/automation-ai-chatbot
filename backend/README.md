@@ -42,7 +42,35 @@ This means:
 - MCP tools still work  
 - Chat responses come from a local function  
 
-## 🧩 AWS Mode > Claude Call (No Local-Only Mode)
+## 🧩 Use Claude via Anthropic API
+###  Sign up for Anthropic
+Go to Anthropic Console
+Create an account (or log in if you already have one)
+
+###  Get your API key
+In the Anthropic Console, navigate to API Keys
+Click Create Key
+Copy the key (looks like sk-ant-xxxxxxxxxxxxxxxx)
+⚠️ Keep this secret — it’s like a password.
+
+###  Install Anthropic Python SDK
+pip install anthropic
+
+### Set Your API Key
+setx ANTHROPIC_API_KEY "sk-ant-xxxxxxxxxxxxxxxx"
+Restart your terminal so the environment variable is available.
+
+## 🧩 Use Claude Call via AWS Bedrock (No Local-Only Mode)
+### Download and Install AWS CLI
+Go to the official AWS page:
+AWS CLI for Windows (MSI Installer)
+Choose the latest AWS CLI v2 MSI installer for Windows.
+
+### Use AWS credentials
+You must create an IAM user or role with Bedrock permissions.
+Generate Access Key ID and Secret Access Key.
+Configure them locally (aws configure or environment variables).
+
 ### Set aws credentials in Powershell
 setx AWS_ACCESS_KEY_ID "YOUR_KEY"
 setx AWS_SECRET_ACCESS_KEY "YOUR_SECRET"
@@ -69,6 +97,23 @@ setx AWS_ACCESS_KEY_ID "ASIAxxxxxxxxxxxx"
 setx AWS_SECRET_ACCESS_KEY "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 setx AWS_SESSION_TOKEN "IQoJb3JpZ2luX2VjE..."
 setx AWS_REGION "us-east-1"
+
+##  🧩 Use Open-Source LLMs
+You can integrate an open‑source LLM locally instead of relying on AWS or Anthropic. This gives you full control, offline capability, and avoids API costs.
+
+### Open Source LLMs
+LLaMA 3 → Meta’s latest model, widely used, strong performance.
+Mistral → Lightweight, efficient, great for local inference.
+GPT‑J / GPT‑NeoX → Older but still capable, easy to run.
+Ollama → A tool that makes running models locally very simple.
+
+### Install Ollama (easiest path)
+Download and Install Ollama: ollama.ai
+Run a model, e.g. LLaMA 3:
+PS Command: ollama run llama3
+### Integrate with your backend
+Modify your bedrock.py (or create local_llm.py) to call Ollama:
+
 
 ## 🔌 API Endpoints
 
