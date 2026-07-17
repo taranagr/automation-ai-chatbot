@@ -1,31 +1,21 @@
-import os
+# backend/app/services/bedrock.py
+
 import json
-import boto3
-from .mcp_client import maybe_call_tools
-
-BEDROCK_REGION = os.getenv("BEDROCK_REGION", "us-east-1")
-MODEL_ID = os.getenv(
-    "BEDROCK_MODEL_ID",
-    "anthropic.claude-3-5-sonnet-20240620-v1:0"
-)
-
-client = boto3.client("bedrock-runtime", region_name=BEDROCK_REGION)
+from app.services.mcp_client import maybe_call_tools
 
 async def call_claude(message: str) -> str:
-    body = {
-        "modelId": MODEL_ID,
-        "messages": [{"role": "user", "content": message}],
-        "maxTokens": 800,
-        "temperature": 0.7
-    }
+    """
+    Local-only mode:
+    - No AWS
+    - No Bedrock
+    - Simulates Claude behavior
+    - Supports MCP tool calls
+    """
 
-    response = client.invoke_model(
-        modelId=MODEL_ID,
-        body=json.dumps(body)
-    )
+    # If the user triggers a tool call, run it
+    tool_result = await maybe_call_tools(message, message)
+    if tool_result != message:
+        return tool_result
 
-    result = json.loads(response["body"].read())
-    # if you wire tool use, intercept here:
-    content = result.get("output", {}).get("text") or result.get("content") or ""
-    content = await maybe_call_tools(message, content)
-    return content
+    # Otherwise, simulate a simple assistant response
+    return f"(local assistant) You said: {message}"

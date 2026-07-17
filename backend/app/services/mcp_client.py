@@ -1,14 +1,19 @@
 import os
 import httpx
 
-MCP_URL = os.getenv("MCP_SERVER_URL")  # e.g. http://mcp.internal:8001
+MCP_SERVER_URL = "http://localhost:8001"
+# MCP_SERVER_URL = os.getenv("MCP_SERVER_URL")  # e.g. http://mcp.internal:8001
 
-async def maybe_call_tools(user_message: str, model_output: str) -> str:
-    # Stub: in a real setup, parse tool calls from model_output
-    # and call MCP server. For now, just return model_output.
-    # Example:
-    # async with httpx.AsyncClient() as client:
-    #     res = await client.post(f"{MCP_URL}/tool", json={...})
-    #     tool_result = res.json()
-    #     ...
-    return model_output
+async def maybe_call_tools(message: str, fallback: str) -> str:
+    if message.startswith("[tool:"):
+        tool_name = message.replace("[tool:", "").replace("]", "")
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    f"{MCP_SERVER_URL}/tool",
+                    json={"tool_name": tool_name, "args": {}}
+                )
+            return response.json().get("result", "Tool execution failed")
+        except Exception as e:
+            return f"Tool error: {str(e)}"
+    return fallback
